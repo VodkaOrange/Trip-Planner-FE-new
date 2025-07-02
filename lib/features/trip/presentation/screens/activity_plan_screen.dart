@@ -81,13 +81,16 @@ class ActivityPlanScreen extends StatelessWidget {
             if (state is ActivityPlanLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ActivityPlanLoaded) {
+              // Determine if the trip is fully planned
+              final isTripPlanFinalized = state.itinerary.dayPlans
+                  .every((day) => !day.canFitAnotherActivityInTheSameDay);
+
               return Column(
                 children: [
                   Expanded(
                     child: _buildDayCards(context, state),
                   ),
-                  if (state.itinerary.finalized)
-                    _buildSaveTripButton(context),
+                  if (isTripPlanFinalized) _buildSaveTripButton(context),
                 ],
               );
             } else if (state is ActivityPlanError) {
@@ -138,7 +141,7 @@ class ActivityPlanScreen extends StatelessWidget {
                         image: NetworkImage(dayPlan.activities.first.image),
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5),
+                          AppColors.black.withOpacity(0.5),
                           BlendMode.darken,
                         ),
                       ),
@@ -157,7 +160,7 @@ class ActivityPlanScreen extends StatelessWidget {
                           ?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: hasActivities
-                                ? Colors.white
+                                ? AppColors.white
                                 : Theme.of(context).primaryColor,
                           ),
                     ),
