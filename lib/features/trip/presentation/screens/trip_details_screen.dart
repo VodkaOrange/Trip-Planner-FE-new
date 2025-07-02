@@ -24,20 +24,38 @@ class TripDetailsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Trip Details'),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.black,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
             builder: (context, state) {
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTravelerSelection(context, state),
-                  const SizedBox(height: 24),
-                  _buildDateSelection(context, state),
-                  const SizedBox(height: 24),
-                  _buildOriginAirport(context, state),
-                  const Spacer(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Great! Let's sort out the details.",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 24),
+                          _buildTravelerSelection(context, state),
+                          const SizedBox(height: 24),
+                          _buildDateSelection(context, state),
+                          const SizedBox(height: 24),
+                          _buildOriginAirport(context, state),
+                        ],
+                      ),
+                    ),
+                  ),
                   _buildNextButton(context, state),
                 ],
               );
@@ -50,135 +68,184 @@ class TripDetailsScreen extends StatelessWidget {
 
   Widget _buildTravelerSelection(
       BuildContext context, TripDetailsState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            const Icon(Icons.person),
-            const SizedBox(width: 8),
-            const Text(
-              'Travelers',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Adults'),
             Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.remove),
-                  onPressed: () => context
-                      .read<TripDetailsBloc>()
-                      .add(DecrementAdults()),
-                ),
-                Text(state.numberOfAdults.toString()),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () => context
-                      .read<TripDetailsBloc>()
-                      .add(IncrementAdults()),
+                const Icon(Icons.group_outlined),
+                const SizedBox(width: 8),
+                Text(
+                  'Who is traveling?',
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
             ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Children'),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.remove),
-                  onPressed: () => context
-                      .read<TripDetailsBloc>()
-                      .add(DecrementChildren()),
-                ),
-                Text(state.numberOfChildren.toString()),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () => context
-                      .read<TripDetailsBloc>()
-                      .add(IncrementChildren()),
-                ),
-              ],
+            const SizedBox(height: 8),
+            const Divider(),
+            _buildCounterTile(
+              context: context,
+              title: 'Adults',
+              value: state.numberOfAdults,
+              onIncrement: () =>
+                  context.read<TripDetailsBloc>().add(IncrementAdults()),
+              onDecrement: () =>
+                  context.read<TripDetailsBloc>().add(DecrementAdults()),
+            ),
+            _buildCounterTile(
+              context: context,
+              title: 'Children',
+              value: state.numberOfChildren,
+              onIncrement: () =>
+                  context.read<TripDetailsBloc>().add(IncrementChildren()),
+              onDecrement: () =>
+                  context.read<TripDetailsBloc>().add(DecrementChildren()),
             ),
           ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildCounterTile({
+    required BuildContext context,
+    required String title,
+    required int value,
+    required VoidCallback onIncrement,
+    required VoidCallback onDecrement,
+  }) {
+    return ListTile(
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.remove_circle_outline),
+            onPressed: onDecrement,
+            color: Theme.of(context).primaryColor,
+          ),
+          Text(value.toString(),
+              style:
+                  Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline),
+            onPressed: onIncrement,
+            color: Theme.of(context).primaryColor,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildDateSelection(
       BuildContext context, TripDetailsState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Icon(Icons.calendar_today),
-            const SizedBox(width: 8),
-            const Text(
-              'Trip dates',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          readOnly: true,
-          decoration: InputDecoration(
-            hintText: state.dateRange == null
-                ? 'Trip dates range'
-                : '${DateFormat.yMd().format(state.dateRange!.start)} - ${DateFormat.yMd().format(state.dateRange!.end)}',
-          ),
-          onTap: () async {
-            final dateRange = await showDateRangePicker(
-              context: context,
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(const Duration(days: 365)),
-            );
-            if (dateRange != null) {
-              context
-                  .read<TripDetailsBloc>()
-                  .add(SelectDateRange(dateRange));
-            }
-          },
-        ),
-      ],
-    );
+    return Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                     const Icon(Icons.calendar_month_outlined),
+                     const SizedBox(width: 8),
+                     Text('When are you going?',
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
+                TextFormField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: 'Select your trip dates',
+                    prefixIcon: const Icon(Icons.calendar_today_outlined),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  controller: TextEditingController(
+                    text: state.dateRange == null
+                        ? ''
+                        : '${DateFormat.yMMMd().format(state.dateRange!.start)} - ${DateFormat.yMMMd().format(state.dateRange!.end)}',
+                  ),
+                  onTap: () async {
+                    final dateRange = await showDateRangePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(const Duration(days: 365)),
+                    );
+                    if (dateRange != null) {
+                      context
+                          .read<TripDetailsBloc>()
+                          .add(SelectDateRange(dateRange));
+                    }
+                  },
+                ),
+              ],
+            )));
   }
 
   Widget _buildOriginAirport(
       BuildContext context, TripDetailsState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Origin Airport (optional)',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.flight_takeoff_outlined),
+                const SizedBox(width: 8),
+                Text('Where are you flying from?',
+                    style: Theme.of(context).textTheme.titleLarge),
+              ],
+            ),
+             const SizedBox(height: 8),
+            const Divider(),
+             const SizedBox(height: 8),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Origin Airport (optional)',
+                prefixIcon: const Icon(Icons.airplanemode_active_outlined),
+                border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                 filled: true,
+                fillColor: Colors.grey[100],
+              ),
+              onChanged: (value) =>
+                  context.read<TripDetailsBloc>().add(SetOriginAirport(value)),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        TextFormField(
-          decoration: const InputDecoration(
-            hintText: 'Origin Airport (optional)',
-          ),
-          onChanged: (value) =>
-              context.read<TripDetailsBloc>().add(SetOriginAirport(value)),
-        ),
-      ],
+      ),
     );
   }
 
   Widget _buildNextButton(
       BuildContext context, TripDetailsState state) {
-    return Center(
+    return SizedBox(
+      width: double.infinity,
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
         onPressed: state.dateRange != null
             ? () {
                 Navigator.of(context).push(
@@ -198,7 +265,7 @@ class TripDetailsScreen extends StatelessWidget {
                 );
               }
             : null,
-        child: const Text('Next'),
+        child: const Text('Next', style: TextStyle(fontSize: 18)),
       ),
     );
   }

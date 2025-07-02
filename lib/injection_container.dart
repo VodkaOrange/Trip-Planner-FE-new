@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ai_trip_planner/features/trip/data/repositories/trip_repository_impl.dart';
 import 'package:ai_trip_planner/features/trip/domain/repositories/trip_repository.dart';
@@ -13,9 +14,11 @@ final sl = GetIt.instance;
 void init() {
   // External
   sl.registerLazySingleton(() => const FlutterSecureStorage());
+  sl.registerLazySingleton(() => Dio());
 
   // Register repositories
-  sl.registerLazySingleton<TripRepository>(() => TripRepositoryImpl());
+  sl.registerLazySingleton<TripRepository>(
+      () => TripRepositoryImpl(dio: sl(), secureStorage: sl()));
 
   // Register BLoCs
   sl.registerFactory(() => PlanYourAdventureBloc());

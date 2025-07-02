@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ai_trip_planner/features/trip/data/models/suggested_city_model.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/suggested_cities_bloc.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/suggested_cities_event.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/suggested_cities_state.dart';
@@ -18,20 +20,31 @@ class SuggestedCitiesScreen extends StatelessWidget {
       create: (_) =>
           sl<SuggestedCitiesBloc>()..add(GetSuggestedCities(preferences)),
       child: Scaffold(
-        backgroundColor: Colors.black.withOpacity(0.5),
-        body: Center(
-          child:
-              BlocBuilder<SuggestedCitiesBloc, SuggestedCitiesState>(
-            builder: (context, state) {
-              if (state is SuggestedCitiesLoading) {
-                return const CircularProgressIndicator();
-              } else if (state is SuggestedCitiesLoaded) {
-                return _buildCityCards(context, state.cities);
-              } else if (state is SuggestedCitiesError) {
-                return Text(state.message);
-              }
-              return Container();
-            },
+        backgroundColor: Colors.transparent, // Important for the blur effect
+        body: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Center(
+            child: BlocBuilder<SuggestedCitiesBloc, SuggestedCitiesState>(
+              builder: (context, state) {
+                if (state is SuggestedCitiesLoading) {
+                  return const CircularProgressIndicator(color: Colors.white);
+                } else if (state is SuggestedCitiesLoaded) {
+                  if (state.cities.isEmpty) {
+                    return const Text(
+                      'No city suggestions found.',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    );
+                  }
+                  return _buildCityCards(context, state.cities);
+                } else if (state is SuggestedCitiesError) {
+                  return Text(
+                    'Error: ${state.message}',
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                  );
+                }
+                return Container(); // Should not be reached
+              },
+            ),
           ),
         ),
       ),
@@ -39,23 +52,28 @@ class SuggestedCitiesScreen extends StatelessWidget {
   }
 
   Widget _buildCityCards(
-      BuildContext context, List<dynamic> cities) {
+      BuildContext context, List<SuggestedCityModel> cities) {
     return SizedBox(
-      height: 400,
+      height: 450, // Increased height to better fit cards
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: cities.length,
         itemBuilder: (context, index) {
           final city = cities[index];
-          return Transform.rotate(
-            angle: (index % 2 == 0 ? -1 : 1) * (math.pi / 20),
-            child: HearthstoneCard(
-              imageUrl: city.imageUrl,
-              title: city.city,
-              description: city.overview,
-              onTap: () {
-                Navigator.of(context).pop(city.city);
-              },
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Transform.rotate(
+              angle: (index == 0
+                  ? 0
+                  : (index % 2 == 0 ? -1 : 1) * (math.pi / 20)),
+              child: HearthstoneCard(
+                imageUrl: city.imageUrl,
+                title: city.city,
+                description: city.overview,
+                onTap: () {
+                  Navigator.of(context).pop(city.city);
+                },
+              ),
             ),
           );
         },
