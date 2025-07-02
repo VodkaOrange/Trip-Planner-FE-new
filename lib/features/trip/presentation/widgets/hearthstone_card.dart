@@ -41,7 +41,7 @@ class _HearthstoneCardState extends State<HearthstoneCard>
     );
 
     _confettiController =
-        ConfettiController(duration: const Duration(seconds: 1));
+        ConfettiController(duration: const Duration(seconds: 3)); // Increased duration
     _shineController.repeat();
   }
 
@@ -75,9 +75,11 @@ class _HearthstoneCardState extends State<HearthstoneCard>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         _confettiController.play();
-        if (widget.onTap != null) {
+        // Wait for a short period before executing the tap action for a smoother feel
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (mounted && widget.onTap != null) {
           widget.onTap!();
         }
       },
