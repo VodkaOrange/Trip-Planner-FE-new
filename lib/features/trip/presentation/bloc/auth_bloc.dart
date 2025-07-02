@@ -28,13 +28,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onSignUp(SignUp event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      // First, sign up the user
-      await tripRepository.signUp(event.username, event.email, event.password);
-      
-      // Then, immediately sign them in to get the token
-      final token = await tripRepository.signIn(event.username, event.password);
+      // Sign up the user and get the token directly
+      final token = await tripRepository.signUp(
+          event.username, event.email, event.password);
       await secureStorage.write(key: 'token', value: token);
-
       emit(AuthSuccess());
     } catch (e) {
       emit(AuthFailure(e.toString()));
