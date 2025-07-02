@@ -1,9 +1,10 @@
+import 'package:ai_trip_planner/features/trip/data/models/day_plan_model.dart';
+import 'package:ai_trip_planner/features/trip/data/models/itinerary_response_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_trip_planner/features/trip/data/models/activity_model.dart';
 import 'package:ai_trip_planner/features/trip/domain/repositories/trip_repository.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/activity_plan_event.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/activity_plan_state.dart';
-import 'package:collection/collection.dart';
 
 class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
   final TripRepository tripRepository;
