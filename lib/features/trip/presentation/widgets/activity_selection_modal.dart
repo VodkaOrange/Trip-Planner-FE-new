@@ -20,7 +20,6 @@ class ActivitySelectionModal extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
-        // Set a height that accommodates the cards and title
         height: 500,
         child: Column(
           children: [
@@ -32,22 +31,22 @@ class ActivitySelectionModal extends StatelessWidget {
               ),
             ),
             const Divider(height: 1),
-            // Use an Expanded ListView for the scrollable content
             Expanded(
               child: ListView.builder(
-                scrollDirection: Axis.horizontal, // Changed to horizontal
+                scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.all(16.0),
                 itemCount: activities.length,
                 itemBuilder: (context, index) {
                   final activity = activities[index];
                   return Padding(
-                    // Changed to horizontal padding
                     padding: const EdgeInsets.only(right: 16.0),
                     child: HearthstoneCard(
                       imageUrl: activity.image,
                       title: activity.name,
                       description: activity.description,
                       onTap: () => onActivitySelected(activity),
+                      price: activity.estimatedCostEUR,
+                      duration: activity.expectedDurationHours,
                     ),
                   );
                 },

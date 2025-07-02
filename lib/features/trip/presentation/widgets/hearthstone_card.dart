@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 
 class HearthstoneCard extends StatefulWidget {
-  final String? imageUrl; // Made nullable
+  final String? imageUrl;
   final String title;
   final String description;
   final VoidCallback? onTap;
+  final double? price; // New field for price
+  final double? duration; // New field for duration
 
   const HearthstoneCard({
     super.key,
@@ -14,6 +16,8 @@ class HearthstoneCard extends StatefulWidget {
     required this.title,
     required this.description,
     this.onTap,
+    this.price,
+    this.duration,
   });
 
   @override
@@ -172,6 +176,25 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                       ],
                     ),
                   ),
+                  // Price and Duration Pills
+                  if (widget.price != null)
+                    Positioned(
+                      top: 12,
+                      left: 12,
+                      child: _buildInfoPill(
+                        icon: Icons.euro_symbol,
+                        text: widget.price!.toStringAsFixed(0),
+                      ),
+                    ),
+                  if (widget.duration != null)
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: _buildInfoPill(
+                        icon: Icons.timer_outlined,
+                        text: '${widget.duration}h',
+                      ),
+                    ),
                   // Shine Effect
                   AnimatedBuilder(
                     animation: _shineAnimation,
@@ -217,6 +240,25 @@ class _HearthstoneCardState extends State<HearthstoneCard>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildInfoPill({required IconData icon, required String text}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.black.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.white, size: 16),
+          const SizedBox(width: 4),
+          Text(text,
+              style:
+                  const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+        ],
       ),
     );
   }
