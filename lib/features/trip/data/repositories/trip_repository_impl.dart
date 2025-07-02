@@ -65,9 +65,9 @@ class TripRepositoryImpl implements TripRepository {
 
   @override
   Future<List<ActivityModel>> getSuggestedActivities(
-      int tripId, int dayId) async {
+      int tripId, int dayNumber) async {
     final response =
-        await dio.get('/trip/$tripId/days/$dayId/suggestions/activities');
+        await dio.get('/trip/$tripId/days/$dayNumber/suggestions/activities');
     return (response.data as List)
         .map((activity) => ActivityModel.fromJson(activity))
         .toList();
@@ -75,9 +75,9 @@ class TripRepositoryImpl implements TripRepository {
 
   @override
   Future<ItineraryResponseModel> selectActivity(
-      int tripId, int dayId, ActivityModel activity) async {
+      int tripId, int dayNumber, ActivityModel activity) async {
     final response = await dio.post(
-      '/trip/$tripId/days/$dayId/activities',
+      '/trip/$tripId/days/$dayNumber/activities',
       data: activity.toJson(),
     );
     return ItineraryResponseModel.fromJson(response.data);

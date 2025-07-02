@@ -14,10 +14,10 @@ abstract class TripRepository {
       String toDate,
       List<String> interests);
 
-  Future<List<ActivityModel>> getSuggestedActivities(int tripId, int dayId);
+  Future<List<ActivityModel>> getSuggestedActivities(int tripId, int dayNumber);
 
   Future<ItineraryResponseModel> selectActivity(
-      int tripId, int dayId, ActivityModel activity);
+      int tripId, int dayNumber, ActivityModel activity);
 
   Future<String> signIn(String username, String password);
 

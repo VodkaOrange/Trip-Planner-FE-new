@@ -40,21 +40,21 @@ class GetInitialActivityPlan extends ActivityPlanEvent {
 
 class GetSuggestedActivitiesForDay extends ActivityPlanEvent {
   final int tripId;
-  final int dayId;
+  final int dayNumber;
 
-  const GetSuggestedActivitiesForDay(this.tripId, this.dayId);
+  const GetSuggestedActivitiesForDay(this.tripId, this.dayNumber);
 
   @override
-  List<Object> get props => [tripId, dayId];
+  List<Object> get props => [tripId, dayNumber];
 }
 
 class SelectActivityForDay extends ActivityPlanEvent {
   final int tripId;
-  final int dayId;
+  final int dayNumber;
   final ActivityModel activity;
 
-  const SelectActivityForDay(this.tripId, this.dayId, this.activity);
+  const SelectActivityForDay(this.tripId, this.dayNumber, this.activity);
 
   @override
-  List<Object> get props => [tripId, dayId, activity];
+  List<Object> get props => [tripId, dayNumber, activity];
 }

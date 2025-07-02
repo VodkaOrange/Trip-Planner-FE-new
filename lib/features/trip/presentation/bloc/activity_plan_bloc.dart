@@ -37,7 +37,7 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
     try {
       final currentState = state as ActivityPlanLoaded;
       final activities = await tripRepository.getSuggestedActivities(
-          event.tripId, event.dayId);
+          event.tripId, event.dayNumber);
       emit(currentState.copyWith(suggestedActivities: activities));
     } catch (e) {
       emit(ActivityPlanError(e.toString()));
@@ -48,7 +48,7 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
       SelectActivityForDay event, Emitter<ActivityPlanState> emit) async {
     try {
       final updatedItinerary = await tripRepository.selectActivity(
-          event.tripId, event.dayId, event.activity);
+          event.tripId, event.dayNumber, event.activity);
       emit(ActivityPlanLoaded(itinerary: updatedItinerary));
     } catch (e) {
       emit(ActivityPlanError(e.toString()));

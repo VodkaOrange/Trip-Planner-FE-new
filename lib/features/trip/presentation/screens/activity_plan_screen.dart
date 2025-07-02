@@ -57,12 +57,11 @@ class ActivityPlanScreen extends StatelessWidget {
                   activities: state.suggestedActivities!,
                   onActivitySelected: (activity) {
                     final tripId = state.itinerary.id;
-                    final dayId = state.itinerary.dayPlans
+                    final dayNumber = state.itinerary.dayPlans
                         .firstWhere((dp) => dp.canFitAnotherActivityInTheSameDay)
-                        .id;
-                    context
-                        .read<ActivityPlanBloc>()
-                        .add(SelectActivityForDay(tripId, dayId, activity));
+                        .dayNumber;
+                    context.read<ActivityPlanBloc>().add(
+                        SelectActivityForDay(tripId, dayNumber, activity));
                     Navigator.of(context).pop();
                   },
                 ),
@@ -125,7 +124,8 @@ class ActivityPlanScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildActivityBubbles(context, state, dayPlan.id),
+                  child:
+                      _buildActivityBubbles(context, state, dayPlan.dayNumber),
                 ),
               ],
             ),
@@ -136,9 +136,9 @@ class ActivityPlanScreen extends StatelessWidget {
   }
 
   Widget _buildActivityBubbles(
-      BuildContext context, ActivityPlanLoaded state, int dayId) {
+      BuildContext context, ActivityPlanLoaded state, int dayNumber) {
     final dayPlan =
-        state.itinerary.dayPlans.firstWhere((dp) => dp.id == dayId);
+        state.itinerary.dayPlans.firstWhere((dp) => dp.dayNumber == dayNumber);
     final activities = dayPlan.activities;
 
     return Wrap(
@@ -165,7 +165,8 @@ class ActivityPlanScreen extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 context.read<ActivityPlanBloc>().add(
-                    GetSuggestedActivitiesForDay(state.itinerary.id, dayId));
+                    GetSuggestedActivitiesForDay(
+                        state.itinerary.id, dayNumber));
               },
               child: const CircleAvatar(
                 radius: 25,
