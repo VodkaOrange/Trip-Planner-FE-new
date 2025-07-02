@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/widgets/custom_app_bar.dart';
 import 'package:ai_trip_planner/core/widgets/error_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,9 +46,7 @@ class ActivityPlanScreen extends StatelessWidget {
           interests: interests,
         )),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Activity Plan'),
-        ),
+        appBar: const CustomAppBar(title: 'Activity Plan'),
         body: BlocConsumer<ActivityPlanBloc, ActivityPlanState>(
           listener: (context, state) {
             if (state is ActivityPlanLoaded &&
@@ -85,7 +84,7 @@ class ActivityPlanScreen extends StatelessWidget {
               );
             } else if (state is ActivityPlanError) {
               return ErrorStateWidget(
-                message: 'Failed to load activity plan. ${state.message}',
+                message: 'Oops! Something went wrong.',
                 onTryAgain: () {
                   context.read<ActivityPlanBloc>().add(
                         GetInitialActivityPlan(

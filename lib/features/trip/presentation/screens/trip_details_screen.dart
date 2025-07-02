@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/trip_details_bloc.dart';
@@ -22,12 +23,7 @@ class TripDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<TripDetailsBloc>(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Trip Details'),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black,
-        ),
+        appBar: const CustomAppBar(title: 'Trip Details'),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: BlocBuilder<TripDetailsBloc, TripDetailsState>(

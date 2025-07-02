@@ -15,11 +15,9 @@ class PlanYourAdventureScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<PlanYourAdventureBloc>(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plan Your Adventure'),
-        ),
+        // The AppBar has been removed to eliminate the double title.
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 16.0), // Added top padding
           child: BlocBuilder<PlanYourAdventureBloc, PlanYourAdventureState>(
             builder: (context, state) {
               return Column(
@@ -30,15 +28,17 @@ class PlanYourAdventureScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Plan Your Adventure',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                             style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium // Use a more prominent style
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             'Choose your dream activities and let us plan the perfect trip!',
-                            style: TextStyle(fontSize: 16),
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 24),
                           _buildActivityGrid(context, state),
@@ -209,13 +209,13 @@ class PlanYourAdventureScreen extends StatelessWidget {
         onPressed: isEnabled
             ? () async {
                 if (state.isAiChoice) {
-                  final preferencesForApi = state.selectedActivities
+                   final preferencesForApi = state.selectedActivities
                       .map((activity) => activity.toLowerCase().replaceAll(' ', '_'))
                       .toList();
-
                   final selectedCity = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => SuggestedCitiesScreen(
+                    PageRouteBuilder(
+                      opaque: false,
+                      pageBuilder: (context, _, __) => SuggestedCitiesScreen(
                         preferences: preferencesForApi,
                       ),
                     ),

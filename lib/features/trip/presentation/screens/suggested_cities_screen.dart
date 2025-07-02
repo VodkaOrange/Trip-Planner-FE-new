@@ -48,7 +48,8 @@ class SuggestedCitiesScreen extends StatelessWidget {
                   return _buildCityCards(context, state.cities);
                 } else if (state is SuggestedCitiesError) {
                   return ErrorStateWidget(
-                    message: 'Oops! Something went wrong. ${state.message}',
+                    message:
+                        'Oops! Something went wrong.',
                     onTryAgain: () {
                       context
                           .read<SuggestedCitiesBloc>()
@@ -71,30 +72,33 @@ class SuggestedCitiesScreen extends StatelessWidget {
 
   Widget _buildCityCards(
       BuildContext context, List<SuggestedCityModel> cities) {
-    return SizedBox(
-      height: 450, // Increased height to better fit cards
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: cities.length,
-        itemBuilder: (context, index) {
-          final city = cities[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Transform.rotate(
-              angle: (index == 0
-                  ? 0
-                  : (index % 2 == 0 ? -1 : 1) * (math.pi / 20)),
-              child: HearthstoneCard(
-                imageUrl: city.imageUrl,
-                title: city.city,
-                description: city.overview,
-                onTap: () {
-                  Navigator.of(context).pop(city.city);
-                },
+    return Material(
+      color: Colors.transparent,
+      child: SizedBox(
+        height: 450, // Increased height to better fit cards
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: cities.length,
+          itemBuilder: (context, index) {
+            final city = cities[index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Transform.rotate(
+                angle: (index == 0
+                    ? 0
+                    : (index % 2 == 0 ? -1 : 1) * (math.pi / 20)),
+                child: HearthstoneCard(
+                  imageUrl: city.imageUrl,
+                  title: city.city,
+                  description: city.overview,
+                  onTap: () {
+                    Navigator.of(context).pop(city.city);
+                  },
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -14,9 +15,7 @@ class _SaveShareBookScreenState extends State<SaveShareBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Save, Share & Book'),
-      ),
+      appBar: const CustomAppBar(title: 'Save, Share & Book'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
