@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 
 class HearthstoneCard extends StatefulWidget {
-  final String imageUrl;
+  final String? imageUrl; // Made nullable
   final String title;
   final String description;
   final VoidCallback? onTap;
 
   const HearthstoneCard({
     super.key,
-    required this.imageUrl,
+    this.imageUrl,
     required this.title,
     required this.description,
     this.onTap,
@@ -105,49 +105,65 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                     height: 400,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      image: DecorationImage(
-                        image: NetworkImage(widget.imageUrl),
-                        fit: BoxFit.cover,
-                      ),
+                      // Conditionally set the background
+                      image: widget.imageUrl != null
+                          ? DecorationImage(
+                              image: NetworkImage(widget.imageUrl!),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                      color: widget.imageUrl == null
+                          ? Colors.grey[200]
+                          : null,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: const BoxDecoration(
-                            color: AppColors.blackWithHigherOpacity,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(16),
-                              bottomRight: Radius.circular(16),
+                    // Display a placeholder icon if no image is available
+                    child: widget.imageUrl == null
+                        ? const Center(
+                            child: Icon(
+                              Icons.local_activity_outlined,
+                              size: 80,
+                              color: Colors.grey,
                             ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                widget.title,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.white,
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: const BoxDecoration(
+                                  color: AppColors.blackWithHigherOpacity,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                widget.description,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.white,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.title,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      widget.description,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
                   ),
                   // Shine Effect
                   AnimatedBuilder(

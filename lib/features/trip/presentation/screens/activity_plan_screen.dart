@@ -81,16 +81,14 @@ class ActivityPlanScreen extends StatelessWidget {
             if (state is ActivityPlanLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ActivityPlanLoaded) {
-              // Determine if the trip is fully planned
-              final isTripPlanFinalized = state.itinerary.dayPlans
-                  .every((day) => !day.canFitAnotherActivityInTheSameDay);
-
               return Column(
                 children: [
                   Expanded(
                     child: _buildDayCards(context, state),
                   ),
-                  if (isTripPlanFinalized) _buildSaveTripButton(context),
+                  if (state.itinerary.dayPlans
+                      .every((day) => !day.canFitAnotherActivityInTheSameDay))
+                    _buildSaveTripButton(context),
                 ],
               );
             } else if (state is ActivityPlanError) {
@@ -125,6 +123,8 @@ class ActivityPlanScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final dayPlan = state.itinerary.dayPlans[index];
         final bool hasActivities = dayPlan.activities.isNotEmpty;
+        final String? firstImage =
+            hasActivities ? dayPlan.activities.first.image : null;
 
         return AnimatedListItem(
           index: index,
@@ -135,10 +135,10 @@ class ActivityPlanScreen extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 8),
             clipBehavior: Clip.antiAlias, // Important for the decoration
             child: Container(
-              decoration: hasActivities
+              decoration: firstImage != null
                   ? BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(dayPlan.activities.first.image),
+                        image: NetworkImage(firstImage),
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
                           AppColors.black.withOpacity(0.5),
@@ -192,10 +192,17 @@ class ActivityPlanScreen extends StatelessWidget {
           return AnimatedListItem(
             index: index,
             child: Hero(
-              tag: activity.image,
+              // Use a unique tag that includes the activity ID to be safe
+              tag: activity.image ?? 'activity-hero-${activity.id}',
               child: CircleAvatar(
                 radius: 30,
-                backgroundImage: NetworkImage(activity.image),
+                backgroundImage: activity.image != null
+                    ? NetworkImage(activity.image!)
+                    : null,
+                // Show a placeholder icon if no image is available
+                child: activity.image == null
+                    ? const Icon(Icons.local_activity, color: Colors.white)
+                    : null,
               ),
             ),
           );

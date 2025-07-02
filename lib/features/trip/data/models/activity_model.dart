@@ -6,14 +6,14 @@ part 'activity_model.g.dart';
 @CopyWith()
 @JsonSerializable()
 class ActivityModel {
-  final int? id; // Made nullable to handle both cases
+  final int? id;
   final String name;
   final String city;
   final String description;
   final double expectedDurationHours;
   final double estimatedCostEUR;
-  final String image;
-  final String address;
+  final String? image; // Made nullable
+  final String? address; // Made nullable
 
   ActivityModel({
     this.id,
@@ -22,8 +22,8 @@ class ActivityModel {
     required this.description,
     required this.expectedDurationHours,
     required this.estimatedCostEUR,
-    required this.image,
-    required this.address,
+    this.image,
+    this.address,
   });
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) =>

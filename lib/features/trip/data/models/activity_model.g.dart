@@ -19,9 +19,9 @@ abstract class _$ActivityModelCWProxy {
 
   ActivityModel estimatedCostEUR(double estimatedCostEUR);
 
-  ActivityModel image(String image);
+  ActivityModel image(String? image);
 
-  ActivityModel address(String address);
+  ActivityModel address(String? address);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ActivityModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -36,8 +36,8 @@ abstract class _$ActivityModelCWProxy {
     String description,
     double expectedDurationHours,
     double estimatedCostEUR,
-    String image,
-    String address,
+    String? image,
+    String? address,
   });
 }
 
@@ -69,10 +69,10 @@ class _$ActivityModelCWProxyImpl implements _$ActivityModelCWProxy {
       this(estimatedCostEUR: estimatedCostEUR);
 
   @override
-  ActivityModel image(String image) => this(image: image);
+  ActivityModel image(String? image) => this(image: image);
 
   @override
-  ActivityModel address(String address) => this(address: address);
+  ActivityModel address(String? address) => this(address: address);
 
   @override
 
@@ -121,11 +121,11 @@ class _$ActivityModelCWProxyImpl implements _$ActivityModelCWProxy {
       image: image == const $CopyWithPlaceholder()
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
-          : image as String,
+          : image as String?,
       address: address == const $CopyWithPlaceholder()
           ? _value.address
           // ignore: cast_nullable_to_non_nullable
-          : address as String,
+          : address as String?,
     );
   }
 }
@@ -148,8 +148,8 @@ ActivityModel _$ActivityModelFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       expectedDurationHours: (json['expectedDurationHours'] as num).toDouble(),
       estimatedCostEUR: (json['estimatedCostEUR'] as num).toDouble(),
-      image: json['image'] as String,
-      address: json['address'] as String,
+      image: json['image'] as String?,
+      address: json['address'] as String?,
     );
 
 Map<String, dynamic> _$ActivityModelToJson(ActivityModel instance) =>
