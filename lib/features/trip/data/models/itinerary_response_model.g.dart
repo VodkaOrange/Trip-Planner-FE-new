@@ -15,7 +15,7 @@ abstract class _$ItineraryResponseModelCWProxy {
 
   ItineraryResponseModel shareableLink(String? shareableLink);
 
-  ItineraryResponseModel createdAt(DateTime createdAt);
+  ItineraryResponseModel createdAt(String createdAt);
 
   ItineraryResponseModel userId(int? userId);
 
@@ -36,7 +36,7 @@ abstract class _$ItineraryResponseModelCWProxy {
     String destination,
     int? numberOfDays,
     String? shareableLink,
-    DateTime createdAt,
+    String createdAt,
     int? userId,
     bool finalized,
     List<DayPlanModel> dayPlans,
@@ -67,7 +67,7 @@ class _$ItineraryResponseModelCWProxyImpl
       this(shareableLink: shareableLink);
 
   @override
-  ItineraryResponseModel createdAt(DateTime createdAt) =>
+  ItineraryResponseModel createdAt(String createdAt) =>
       this(createdAt: createdAt);
 
   @override
@@ -124,7 +124,7 @@ class _$ItineraryResponseModelCWProxyImpl
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
+          : createdAt as String,
       userId: userId == const $CopyWithPlaceholder()
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
@@ -163,7 +163,7 @@ ItineraryResponseModel _$ItineraryResponseModelFromJson(
       destination: json['destination'] as String,
       numberOfDays: (json['numberOfDays'] as num?)?.toInt(),
       shareableLink: json['shareableLink'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: json['createdAt'] as String,
       userId: (json['userId'] as num?)?.toInt(),
       finalized: json['finalized'] as bool,
       dayPlans: (json['dayPlans'] as List<dynamic>)
@@ -181,7 +181,7 @@ Map<String, dynamic> _$ItineraryResponseModelToJson(
       'destination': instance.destination,
       'numberOfDays': instance.numberOfDays,
       'shareableLink': instance.shareableLink,
-      'createdAt': instance.createdAt.toIso8601String(),
+      'createdAt': instance.createdAt,
       'userId': instance.userId,
       'finalized': instance.finalized,
       'dayPlans': instance.dayPlans.map((e) => e.toJson()).toList(),

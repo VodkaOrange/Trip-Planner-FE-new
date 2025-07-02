@@ -10,9 +10,9 @@ part 'itinerary_response_model.g.dart';
 class ItineraryResponseModel {
   final int id;
   final String destination;
-  final int? numberOfDays; // Made nullable
-  final String? shareableLink; // Made nullable
-  final DateTime createdAt;
+  final int? numberOfDays;
+  final String? shareableLink;
+  final String createdAt; // Changed to String to match the API response
   final int? userId;
   final bool finalized;
   final List<DayPlanModel> dayPlans;
