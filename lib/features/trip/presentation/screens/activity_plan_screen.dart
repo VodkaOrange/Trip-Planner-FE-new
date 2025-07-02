@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/widgets/error_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/activity_plan_bloc.dart';
@@ -83,7 +84,22 @@ class ActivityPlanScreen extends StatelessWidget {
                 ],
               );
             } else if (state is ActivityPlanError) {
-              return Center(child: Text(state.message));
+              return ErrorStateWidget(
+                message: 'Failed to load activity plan. ${state.message}',
+                onTryAgain: () {
+                  context.read<ActivityPlanBloc>().add(
+                        GetInitialActivityPlan(
+                          destination: destination,
+                          departureCity: departureCity,
+                          numberOfChildren: numberOfChildren,
+                          numberOfAdults: numberOfAdults,
+                          fromDate: fromDate,
+                          toDate: toDate,
+                          interests: interests,
+                        ),
+                      );
+                },
+              );
             }
             return Container();
           },

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:ai_trip_planner/core/widgets/error_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_trip_planner/features/trip/data/models/suggested_city_model.dart';
@@ -30,18 +31,33 @@ class SuggestedCitiesScreen extends StatelessWidget {
                   return const CircularProgressIndicator(color: Colors.white);
                 } else if (state is SuggestedCitiesLoaded) {
                   if (state.cities.isEmpty) {
-                    return _buildErrorOrEmptyState(
-                      context: context,
-                      icon: Icons.location_city_outlined,
+                    return ErrorStateWidget(
                       message: 'No city suggestions found.',
+                      onTryAgain: () {
+                        context
+                            .read<SuggestedCitiesBloc>()
+                            .add(GetSuggestedCities(preferences));
+                      },
+                       icon: Icons.location_city_outlined,
+                       iconColor: Colors.white,
+                       textColor: Colors.white,
+                       buttonBackgroundColor: Colors.white,
+                       buttonTextColor: Colors.black,
                     );
                   }
                   return _buildCityCards(context, state.cities);
                 } else if (state is SuggestedCitiesError) {
-                   return _buildErrorOrEmptyState(
-                    context: context,
-                    icon: Icons.error_outline,
+                  return ErrorStateWidget(
                     message: 'Oops! Something went wrong. ${state.message}',
+                    onTryAgain: () {
+                      context
+                          .read<SuggestedCitiesBloc>()
+                          .add(GetSuggestedCities(preferences));
+                    },
+                    iconColor: Colors.white,
+                    textColor: Colors.white,
+                    buttonBackgroundColor: Colors.white,
+                    buttonTextColor: Colors.black,
                   );
                 }
                 return Container(); // Should not be reached
@@ -49,42 +65,6 @@ class SuggestedCitiesScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildErrorOrEmptyState({
-    required BuildContext context,
-    required IconData icon,
-    required String message,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.white, size: 64),
-          const SizedBox(height: 16),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.refresh),
-            label: const Text('Try Again'),
-            onPressed: () {
-              context
-                  .read<SuggestedCitiesBloc>()
-                  .add(GetSuggestedCities(preferences));
-            },
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
-            ),
-          )
-        ],
       ),
     );
   }
