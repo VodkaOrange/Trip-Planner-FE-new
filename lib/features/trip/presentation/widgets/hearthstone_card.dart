@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 
@@ -114,9 +115,9 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                       children: [
                         Container(
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
-                            borderRadius: const BorderRadius.only(
+                          decoration: const BoxDecoration(
+                            color: AppColors.blackWithHigherOpacity,
+                            borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(16),
                               bottomRight: Radius.circular(16),
                             ),
@@ -129,7 +130,7 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -137,7 +138,7 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                                 widget.description,
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                               ),
                             ],
@@ -162,9 +163,9 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: [
-                                  Colors.white.withOpacity(0.0),
-                                  Colors.white.withOpacity(0.4),
-                                  Colors.white.withOpacity(0.0),
+                                  AppColors.white.withOpacity(0.0),
+                                  AppColors.white.withOpacity(0.4),
+                                  AppColors.white.withOpacity(0.0),
                                 ],
                                 stops: const [0.4, 0.5, 0.6],
                               ),

@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/plan_your_adventure_bloc.dart';
@@ -106,14 +107,14 @@ class PlanYourAdventureScreen extends StatelessWidget {
               elevation: isSelected ? 8 : 2,
               color: isSelected
                   ? Theme.of(context).primaryColor.withOpacity(0.8)
-                  : Colors.white,
+                  : AppColors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     activity['icon'] as IconData,
                     size: 35,
-                    color: isSelected ? Colors.white : Colors.black,
+                    color: isSelected ? AppColors.white : AppColors.black,
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -121,7 +122,7 @@ class PlanYourAdventureScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
-                      color: isSelected ? Colors.white : Colors.black,
+                      color: isSelected ? AppColors.white : AppColors.black,
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
                     ),

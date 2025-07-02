@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ErrorStateWidget extends StatelessWidget {
@@ -15,8 +16,8 @@ class ErrorStateWidget extends StatelessWidget {
     required this.onTryAgain,
     this.icon = Icons.error_outline,
     this.iconColor = Colors.redAccent,
-    this.textColor = Colors.black87,
-    this.buttonTextColor = Colors.white,
+    this.textColor = AppColors.black,
+    this.buttonTextColor = AppColors.white,
     this.buttonBackgroundColor = Colors.redAccent,
   });
 
