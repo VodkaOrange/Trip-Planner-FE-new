@@ -209,10 +209,14 @@ class PlanYourAdventureScreen extends StatelessWidget {
         onPressed: isEnabled
             ? () async {
                 if (state.isAiChoice) {
+                  final preferencesForApi = state.selectedActivities
+                      .map((activity) => activity.toLowerCase().replaceAll(' ', '_'))
+                      .toList();
+
                   final selectedCity = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => SuggestedCitiesScreen(
-                        preferences: state.selectedActivities,
+                        preferences: preferencesForApi,
                       ),
                     ),
                   );

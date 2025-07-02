@@ -248,6 +248,9 @@ class TripDetailsScreen extends StatelessWidget {
         ),
         onPressed: state.dateRange != null
             ? () {
+                 final interestsForApi = selectedActivities
+                      .map((activity) => activity.toLowerCase().replaceAll(' ', '_'))
+                      .toList();
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => ActivityPlanScreen(
@@ -259,7 +262,7 @@ class TripDetailsScreen extends StatelessWidget {
                           .format(state.dateRange!.start),
                       toDate: DateFormat('yyyy-MM-dd')
                           .format(state.dateRange!.end),
-                      interests: selectedActivities,
+                      interests: interestsForApi,
                     ),
                   ),
                 );
