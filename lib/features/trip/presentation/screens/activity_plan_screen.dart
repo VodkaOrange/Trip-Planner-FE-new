@@ -80,14 +80,15 @@ class ActivityPlanScreen extends StatelessWidget {
             if (state is ActivityPlanLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ActivityPlanLoaded) {
+              final isTripPlanFinalized = state.itinerary.dayPlans
+                  .every((day) => !day.canFitAnotherActivityInTheSameDay);
+
               return Column(
                 children: [
                   Expanded(
                     child: _buildDayCards(context, state),
                   ),
-                  if (state.itinerary.dayPlans
-                      .every((day) => !day.canFitAnotherActivityInTheSameDay))
-                    _buildSaveTripButton(context),
+                  _buildSaveTripButton(context, isTripPlanFinalized),
                 ],
               );
             } else if (state is ActivityPlanError) {
@@ -238,7 +239,7 @@ class ActivityPlanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSaveTripButton(BuildContext context) {
+  Widget _buildSaveTripButton(BuildContext context, bool isEnabled) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
@@ -246,32 +247,34 @@ class ActivityPlanScreen extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
           ),
-          onPressed: () async {
-            final secureStorage = sl<FlutterSecureStorage>();
-            final token = await secureStorage.read(key: 'token');
-            if (token == null) {
-              showDialog(
-                context: context,
-                builder: (_) => const LoginModal(),
-              ).then((_) {
-                secureStorage.read(key: 'token').then((value) {
-                  if (value != null) {
+          onPressed: isEnabled
+              ? () async {
+                  final secureStorage = sl<FlutterSecureStorage>();
+                  final token = await secureStorage.read(key: 'token');
+                  if (token == null) {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const LoginModal(),
+                    ).then((_) {
+                      secureStorage.read(key: 'token').then((value) {
+                        if (value != null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const SaveShareBookScreen(),
+                            ),
+                          );
+                        }
+                      });
+                    });
+                  } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const SaveShareBookScreen(),
                       ),
                     );
                   }
-                });
-              });
-            } else {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const SaveShareBookScreen(),
-                ),
-              );
-            }
-          },
+                }
+              : null,
           child: const Text('Want to save your trip plan and get an offer?'),
         ),
       ),
