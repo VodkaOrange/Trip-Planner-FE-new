@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:ai_trip_planner/core/theme/app_colors.dart';
 import 'package:ai_trip_planner/core/widgets/custom_app_bar.dart';
 import 'package:ai_trip_planner/core/widgets/error_state_widget.dart';
 import 'package:flutter/material.dart';
@@ -51,11 +52,14 @@ class ActivityPlanScreen extends StatelessWidget {
         extendBodyBehindAppBar: true,
         appBar: const CustomAppBar(title: 'Activity Plan'),
         body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                  'https://source.unsplash.com/random/?trip,travel'),
-              fit: BoxFit.cover,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).primaryColor.withOpacity(0.8),
+                AppColors.primary.withOpacity(0.4)
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
           child: BackdropFilter(
@@ -135,11 +139,11 @@ class ActivityPlanScreen extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
+              color: AppColors.white.withOpacity(0.8),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: AppColors.black.withOpacity(0.1),
                   blurRadius: 10,
                   spreadRadius: 5,
                 ),
@@ -205,7 +209,7 @@ class ActivityPlanScreen extends StatelessWidget {
                 strokeWidth: 2,
                 child: const CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: AppColors.transparent,
                   child: Icon(Icons.add, color: Colors.grey, size: 30),
                 ),
               ),
