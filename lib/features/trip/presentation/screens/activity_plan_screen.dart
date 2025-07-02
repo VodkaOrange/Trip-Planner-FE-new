@@ -121,30 +121,50 @@ class ActivityPlanScreen extends StatelessWidget {
       itemCount: state.itinerary.dayPlans.length,
       itemBuilder: (context, index) {
         final dayPlan = state.itinerary.dayPlans[index];
+        final bool hasActivities = dayPlan.activities.isNotEmpty;
+
         return AnimatedListItem(
           index: index,
           child: Card(
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             margin: const EdgeInsets.symmetric(vertical: 8),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Day ${dayPlan.dayNumber}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+            clipBehavior: Clip.antiAlias, // Important for the decoration
+            child: Container(
+              decoration: hasActivities
+                  ? BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(dayPlan.activities.first.image),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.5),
+                          BlendMode.darken,
                         ),
-                  ),
-                  const Divider(height: 24),
-                  _buildActivityBubbles(context, state, dayPlan.dayNumber),
-                ],
+                      ),
+                    )
+                  : null,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Day ${dayPlan.dayNumber}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: hasActivities
+                                ? Colors.white
+                                : Theme.of(context).primaryColor,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildActivityBubbles(context, state, dayPlan.dayNumber),
+                  ],
+                ),
               ),
             ),
           ),

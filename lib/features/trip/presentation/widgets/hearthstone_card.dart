@@ -136,6 +136,8 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                               const SizedBox(height: 8),
                               Text(
                                 widget.description,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: AppColors.white,
