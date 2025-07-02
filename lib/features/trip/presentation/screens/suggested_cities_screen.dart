@@ -30,16 +30,18 @@ class SuggestedCitiesScreen extends StatelessWidget {
                   return const CircularProgressIndicator(color: Colors.white);
                 } else if (state is SuggestedCitiesLoaded) {
                   if (state.cities.isEmpty) {
-                    return const Text(
-                      'No city suggestions found.',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    return _buildErrorOrEmptyState(
+                      context: context,
+                      icon: Icons.location_city_outlined,
+                      message: 'No city suggestions found.',
                     );
                   }
                   return _buildCityCards(context, state.cities);
                 } else if (state is SuggestedCitiesError) {
-                  return Text(
-                    'Error: ${state.message}',
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                   return _buildErrorOrEmptyState(
+                    context: context,
+                    icon: Icons.error_outline,
+                    message: 'Oops! Something went wrong. ${state.message}',
                   );
                 }
                 return Container(); // Should not be reached
@@ -47,6 +49,42 @@ class SuggestedCitiesScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorOrEmptyState({
+    required BuildContext context,
+    required IconData icon,
+    required String message,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: Colors.white, size: 64),
+          const SizedBox(height: 16),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.refresh),
+            label: const Text('Try Again'),
+            onPressed: () {
+              context
+                  .read<SuggestedCitiesBloc>()
+                  .add(GetSuggestedCities(preferences));
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
+            ),
+          )
+        ],
       ),
     );
   }

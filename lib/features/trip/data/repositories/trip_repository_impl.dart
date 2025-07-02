@@ -1,4 +1,5 @@
 import 'package:ai_trip_planner/core/constants/app_constants.dart';
+import 'package:ai_trip_planner/core/network/logging_interceptor.dart';
 import 'package:ai_trip_planner/features/trip/data/models/itinerary_response_model.dart';
 import 'package:ai_trip_planner/features/trip/data/models/suggested_city_model.dart';
 import 'package:ai_trip_planner/features/trip/data/models/activity_model.dart';
@@ -12,7 +13,8 @@ class TripRepositoryImpl implements TripRepository {
 
   TripRepositoryImpl({required this.dio, required this.secureStorage}) {
     dio.options.baseUrl = AppConstants.baseUrl;
-    dio.interceptors.add(
+    dio.interceptors.addAll([
+      LoggingInterceptor(),
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await secureStorage.read(key: 'token');
@@ -22,7 +24,7 @@ class TripRepositoryImpl implements TripRepository {
           return handler.next(options);
         },
       ),
-    );
+    ]);
   }
 
   @override
