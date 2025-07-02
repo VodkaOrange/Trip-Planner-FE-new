@@ -10,8 +10,8 @@ part 'itinerary_response_model.g.dart';
 class ItineraryResponseModel {
   final int id;
   final String destination;
-  final int numberOfDays;
-  final String shareableLink;
+  final int? numberOfDays; // Made nullable
+  final String? shareableLink; // Made nullable
   final DateTime createdAt;
   final int? userId;
   final bool finalized;
@@ -21,8 +21,8 @@ class ItineraryResponseModel {
   ItineraryResponseModel({
     required this.id,
     required this.destination,
-    required this.numberOfDays,
-    required this.shareableLink,
+    this.numberOfDays,
+    this.shareableLink,
     required this.createdAt,
     this.userId,
     required this.finalized,

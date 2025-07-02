@@ -69,6 +69,7 @@ class _$ActivityModelCWProxyImpl implements _$ActivityModelCWProxy {
   ActivityModel address(String address) => this(address: address);
 
   @override
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ActivityModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -99,9 +100,9 @@ class _$ActivityModelCWProxyImpl implements _$ActivityModelCWProxy {
           : description as String,
       expectedDurationHours:
           expectedDurationHours == const $CopyWithPlaceholder()
-          ? _value.expectedDurationHours
-          // ignore: cast_nullable_to_non_nullable
-          : expectedDurationHours as double,
+              ? _value.expectedDurationHours
+              // ignore: cast_nullable_to_non_nullable
+              : expectedDurationHours as double,
       estimatedCostEUR: estimatedCostEUR == const $CopyWithPlaceholder()
           ? _value.estimatedCostEUR
           // ignore: cast_nullable_to_non_nullable

@@ -48,6 +48,7 @@ class _$SuggestedCityModelCWProxyImpl implements _$SuggestedCityModelCWProxy {
   SuggestedCityModel imageUrl(String imageUrl) => this(imageUrl: imageUrl);
 
   @override
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `SuggestedCityModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage

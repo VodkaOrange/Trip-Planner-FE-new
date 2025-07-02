@@ -14,8 +14,7 @@ abstract class _$DayPlanModelCWProxy {
   DayPlanModel activities(List<ActivityModel> activities);
 
   DayPlanModel canFitAnotherActivityInTheSameDay(
-    bool canFitAnotherActivityInTheSameDay,
-  );
+      bool canFitAnotherActivityInTheSameDay);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DayPlanModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -49,12 +48,12 @@ class _$DayPlanModelCWProxyImpl implements _$DayPlanModelCWProxy {
 
   @override
   DayPlanModel canFitAnotherActivityInTheSameDay(
-    bool canFitAnotherActivityInTheSameDay,
-  ) => this(
-    canFitAnotherActivityInTheSameDay: canFitAnotherActivityInTheSameDay,
-  );
+          bool canFitAnotherActivityInTheSameDay) =>
+      this(
+          canFitAnotherActivityInTheSameDay: canFitAnotherActivityInTheSameDay);
 
   @override
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DayPlanModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -82,9 +81,9 @@ class _$DayPlanModelCWProxyImpl implements _$DayPlanModelCWProxy {
           : activities as List<ActivityModel>,
       canFitAnotherActivityInTheSameDay:
           canFitAnotherActivityInTheSameDay == const $CopyWithPlaceholder()
-          ? _value.canFitAnotherActivityInTheSameDay
-          // ignore: cast_nullable_to_non_nullable
-          : canFitAnotherActivityInTheSameDay as bool,
+              ? _value.canFitAnotherActivityInTheSameDay
+              // ignore: cast_nullable_to_non_nullable
+              : canFitAnotherActivityInTheSameDay as bool,
     );
   }
 }
@@ -100,14 +99,14 @@ extension $DayPlanModelCopyWith on DayPlanModel {
 // **************************************************************************
 
 DayPlanModel _$DayPlanModelFromJson(Map<String, dynamic> json) => DayPlanModel(
-  id: (json['id'] as num).toInt(),
-  dayNumber: (json['dayNumber'] as num).toInt(),
-  activities: (json['activities'] as List<dynamic>)
-      .map((e) => ActivityModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  canFitAnotherActivityInTheSameDay:
-      json['canFitAnotherActivityInTheSameDay'] as bool,
-);
+      id: (json['id'] as num).toInt(),
+      dayNumber: (json['dayNumber'] as num).toInt(),
+      activities: (json['activities'] as List<dynamic>)
+          .map((e) => ActivityModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      canFitAnotherActivityInTheSameDay:
+          json['canFitAnotherActivityInTheSameDay'] as bool,
+    );
 
 Map<String, dynamic> _$DayPlanModelToJson(DayPlanModel instance) =>
     <String, dynamic>{

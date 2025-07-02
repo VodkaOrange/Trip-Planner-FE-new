@@ -11,9 +11,9 @@ abstract class _$ItineraryResponseModelCWProxy {
 
   ItineraryResponseModel destination(String destination);
 
-  ItineraryResponseModel numberOfDays(int numberOfDays);
+  ItineraryResponseModel numberOfDays(int? numberOfDays);
 
-  ItineraryResponseModel shareableLink(String shareableLink);
+  ItineraryResponseModel shareableLink(String? shareableLink);
 
   ItineraryResponseModel createdAt(DateTime createdAt);
 
@@ -34,8 +34,8 @@ abstract class _$ItineraryResponseModelCWProxy {
   ItineraryResponseModel call({
     int id,
     String destination,
-    int numberOfDays,
-    String shareableLink,
+    int? numberOfDays,
+    String? shareableLink,
     DateTime createdAt,
     int? userId,
     bool finalized,
@@ -59,11 +59,11 @@ class _$ItineraryResponseModelCWProxyImpl
       this(destination: destination);
 
   @override
-  ItineraryResponseModel numberOfDays(int numberOfDays) =>
+  ItineraryResponseModel numberOfDays(int? numberOfDays) =>
       this(numberOfDays: numberOfDays);
 
   @override
-  ItineraryResponseModel shareableLink(String shareableLink) =>
+  ItineraryResponseModel shareableLink(String? shareableLink) =>
       this(shareableLink: shareableLink);
 
   @override
@@ -86,6 +86,7 @@ class _$ItineraryResponseModelCWProxyImpl
       this(interests: interests);
 
   @override
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ItineraryResponseModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -115,11 +116,11 @@ class _$ItineraryResponseModelCWProxyImpl
       numberOfDays: numberOfDays == const $CopyWithPlaceholder()
           ? _value.numberOfDays
           // ignore: cast_nullable_to_non_nullable
-          : numberOfDays as int,
+          : numberOfDays as int?,
       shareableLink: shareableLink == const $CopyWithPlaceholder()
           ? _value.shareableLink
           // ignore: cast_nullable_to_non_nullable
-          : shareableLink as String,
+          : shareableLink as String?,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -156,33 +157,33 @@ extension $ItineraryResponseModelCopyWith on ItineraryResponseModel {
 // **************************************************************************
 
 ItineraryResponseModel _$ItineraryResponseModelFromJson(
-  Map<String, dynamic> json,
-) => ItineraryResponseModel(
-  id: (json['id'] as num).toInt(),
-  destination: json['destination'] as String,
-  numberOfDays: (json['numberOfDays'] as num).toInt(),
-  shareableLink: json['shareableLink'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  userId: (json['userId'] as num?)?.toInt(),
-  finalized: json['finalized'] as bool,
-  dayPlans: (json['dayPlans'] as List<dynamic>)
-      .map((e) => DayPlanModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  interests: (json['interests'] as List<dynamic>)
-      .map((e) => InterestModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
+        Map<String, dynamic> json) =>
+    ItineraryResponseModel(
+      id: (json['id'] as num).toInt(),
+      destination: json['destination'] as String,
+      numberOfDays: (json['numberOfDays'] as num?)?.toInt(),
+      shareableLink: json['shareableLink'] as String?,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      userId: (json['userId'] as num?)?.toInt(),
+      finalized: json['finalized'] as bool,
+      dayPlans: (json['dayPlans'] as List<dynamic>)
+          .map((e) => DayPlanModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      interests: (json['interests'] as List<dynamic>)
+          .map((e) => InterestModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$ItineraryResponseModelToJson(
-  ItineraryResponseModel instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'destination': instance.destination,
-  'numberOfDays': instance.numberOfDays,
-  'shareableLink': instance.shareableLink,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'userId': instance.userId,
-  'finalized': instance.finalized,
-  'dayPlans': instance.dayPlans.map((e) => e.toJson()).toList(),
-  'interests': instance.interests.map((e) => e.toJson()).toList(),
-};
+        ItineraryResponseModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'destination': instance.destination,
+      'numberOfDays': instance.numberOfDays,
+      'shareableLink': instance.shareableLink,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'userId': instance.userId,
+      'finalized': instance.finalized,
+      'dayPlans': instance.dayPlans.map((e) => e.toJson()).toList(),
+      'interests': instance.interests.map((e) => e.toJson()).toList(),
+    };
