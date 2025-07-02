@@ -28,7 +28,17 @@ class SuggestedCitiesScreen extends StatelessWidget {
             child: BlocBuilder<SuggestedCitiesBloc, SuggestedCitiesState>(
               builder: (context, state) {
                 if (state is SuggestedCitiesLoading) {
-                  return const CircularProgressIndicator(color: Colors.white);
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(color: Colors.white),
+                      SizedBox(height: 16),
+                      Text(
+                        'Finding the best cities for you...',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ],
+                  );
                 } else if (state is SuggestedCitiesLoaded) {
                   if (state.cities.isEmpty) {
                     return ErrorStateWidget(
