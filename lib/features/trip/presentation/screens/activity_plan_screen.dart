@@ -204,12 +204,22 @@ class ActivityPlanScreen extends StatelessWidget {
                 tag: activity.image ?? 'activity-hero-${activity.id}',
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundImage: activity.image != null
-                      ? NetworkImage(activity.image!)
-                      : null,
-                  child: activity.image == null
-                      ? const Icon(Icons.local_activity, color: Colors.white)
-                      : null,
+                  backgroundColor: Colors.grey[300],
+                  child: ClipOval(
+                    child: activity.image != null
+                        ? Image.network(
+                            activity.image!,
+                            fit: BoxFit.cover,
+                            width: 60,
+                            height: 60,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.local_activity,
+                                  color: Colors.white);
+                            },
+                          )
+                        : const Icon(Icons.local_activity,
+                            color: Colors.white),
+                  ),
                 ),
               ),
             ),

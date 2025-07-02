@@ -31,8 +31,12 @@ class ActivityDetailsScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                         color: AppColors.black.withOpacity(0.3),
                         colorBlendMode: BlendMode.darken,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Show the placeholder on error
+                          return _buildImagePlaceholder(context);
+                        },
                       )
-                    : Container(color: Colors.grey),
+                    : _buildImagePlaceholder(context),
               ),
             ),
           ),
@@ -82,6 +86,26 @@ class ActivityDetailsScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImagePlaceholder(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).primaryColor.withOpacity(0.7),
+            Theme.of(context).primaryColor,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: const Icon(
+        Icons.local_activity_outlined,
+        size: 100,
+        color: AppColors.white,
       ),
     );
   }
