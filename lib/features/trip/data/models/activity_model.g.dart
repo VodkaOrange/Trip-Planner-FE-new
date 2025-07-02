@@ -7,6 +7,8 @@ part of 'activity_model.dart';
 // **************************************************************************
 
 abstract class _$ActivityModelCWProxy {
+  ActivityModel id(int? id);
+
   ActivityModel name(String name);
 
   ActivityModel city(String city);
@@ -28,6 +30,7 @@ abstract class _$ActivityModelCWProxy {
   /// ActivityModel(...).copyWith(id: 12, name: "My name")
   /// ````
   ActivityModel call({
+    int? id,
     String name,
     String city,
     String description,
@@ -43,6 +46,9 @@ class _$ActivityModelCWProxyImpl implements _$ActivityModelCWProxy {
   const _$ActivityModelCWProxyImpl(this._value);
 
   final ActivityModel _value;
+
+  @override
+  ActivityModel id(int? id) => this(id: id);
 
   @override
   ActivityModel name(String name) => this(name: name);
@@ -77,6 +83,7 @@ class _$ActivityModelCWProxyImpl implements _$ActivityModelCWProxy {
   /// ActivityModel(...).copyWith(id: 12, name: "My name")
   /// ````
   ActivityModel call({
+    Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
     Object? city = const $CopyWithPlaceholder(),
     Object? description = const $CopyWithPlaceholder(),
@@ -86,6 +93,10 @@ class _$ActivityModelCWProxyImpl implements _$ActivityModelCWProxy {
     Object? address = const $CopyWithPlaceholder(),
   }) {
     return ActivityModel(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as int?,
       name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
@@ -131,6 +142,7 @@ extension $ActivityModelCopyWith on ActivityModel {
 
 ActivityModel _$ActivityModelFromJson(Map<String, dynamic> json) =>
     ActivityModel(
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String,
       city: json['city'] as String,
       description: json['description'] as String,
@@ -142,6 +154,7 @@ ActivityModel _$ActivityModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ActivityModelToJson(ActivityModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'city': instance.city,
       'description': instance.description,

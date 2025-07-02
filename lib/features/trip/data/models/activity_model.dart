@@ -6,6 +6,7 @@ part 'activity_model.g.dart';
 @CopyWith()
 @JsonSerializable()
 class ActivityModel {
+  final int? id; // Made nullable to handle both cases
   final String name;
   final String city;
   final String description;
@@ -15,6 +16,7 @@ class ActivityModel {
   final String address;
 
   ActivityModel({
+    this.id,
     required this.name,
     required this.city,
     required this.description,
