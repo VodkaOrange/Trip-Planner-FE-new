@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:ai_trip_planner/core/theme/app_colors.dart';
 import 'package:ai_trip_planner/core/widgets/custom_app_bar.dart';
 import 'package:ai_trip_planner/core/widgets/error_state_widget.dart';
 import 'package:flutter/material.dart';
@@ -48,121 +49,103 @@ class ActivityPlanScreen extends StatelessWidget {
           interests: interests,
         )),
       child: Scaffold(
-        extendBodyBehindAppBar: true,
         appBar: const CustomAppBar(title: 'Activity Plan'),
-        body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                  'https://source.unsplash.com/random/?trip,travel'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child:
-                BlocConsumer<ActivityPlanBloc, ActivityPlanState>(
-              listener: (context, state) {
-                if (state is ActivityPlanLoaded &&
-                    state.suggestedActivities != null) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => ActivitySelectionModal(
-                      activities: state.suggestedActivities!,
-                      onActivitySelected: (activity) {
-                        final tripId = state.itinerary.id;
-                        final dayNumber = state.itinerary.dayPlans
-                            .firstWhere(
-                                (dp) => dp.canFitAnotherActivityInTheSameDay)
-                            .dayNumber;
-                        context.read<ActivityPlanBloc>().add(
-                            SelectActivityForDay(tripId, dayNumber, activity));
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ).then((_) {
-                    // After the dialog is closed, clear the suggestions
-                    context
-                        .read<ActivityPlanBloc>()
-                        .add(ClearSuggestedActivities());
-                  });
-                }
-              },
-              builder: (context, state) {
-                if (state is ActivityPlanLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is ActivityPlanLoaded) {
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: _buildDayBubbles(context, state),
-                      ),
-                      if (state.itinerary.finalized)
-                        _buildSaveTripButton(context),
-                    ],
-                  );
-                } else if (state is ActivityPlanError) {
-                  return ErrorStateWidget(
-                    message: 'Oops! Something went wrong.',
-                    onTryAgain: () {
-                      context.read<ActivityPlanBloc>().add(
-                            GetInitialActivityPlan(
-                              destination: destination,
-                              departureCity: departureCity,
-                              numberOfChildren: numberOfChildren,
-                              numberOfAdults: numberOfAdults,
-                              fromDate: fromDate,
-                              toDate: toDate,
-                              interests: interests,
-                            ),
-                          );
-                    },
-                  );
-                }
-                return Container();
-              },
-            ),
-          ),
+        backgroundColor: Colors.grey[100],
+        body: BlocConsumer<ActivityPlanBloc, ActivityPlanState>(
+          listener: (context, state) {
+            if (state is ActivityPlanLoaded &&
+                state.suggestedActivities != null) {
+              showDialog(
+                context: context,
+                builder: (_) => ActivitySelectionModal(
+                  activities: state.suggestedActivities!,
+                  onActivitySelected: (activity) {
+                    final tripId = state.itinerary.id;
+                    final dayNumber = state.itinerary.dayPlans
+                        .firstWhere(
+                            (dp) => dp.canFitAnotherActivityInTheSameDay)
+                        .dayNumber;
+                    context.read<ActivityPlanBloc>().add(
+                        SelectActivityForDay(tripId, dayNumber, activity));
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ).then((_) {
+                context
+                    .read<ActivityPlanBloc>()
+                    .add(ClearSuggestedActivities());
+              });
+            }
+          },
+          builder: (context, state) {
+            if (state is ActivityPlanLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is ActivityPlanLoaded) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: _buildDayCards(context, state),
+                  ),
+                  if (state.itinerary.finalized)
+                    _buildSaveTripButton(context),
+                ],
+              );
+            } else if (state is ActivityPlanError) {
+              return ErrorStateWidget(
+                message: 'Oops! Something went wrong.',
+                onTryAgain: () {
+                  context.read<ActivityPlanBloc>().add(
+                        GetInitialActivityPlan(
+                          destination: destination,
+                          departureCity: departureCity,
+                          numberOfChildren: numberOfChildren,
+                          numberOfAdults: numberOfAdults,
+                          fromDate: fromDate,
+                          toDate: toDate,
+                          interests: interests,
+                        ),
+                      );
+                },
+              );
+            }
+            return Container();
+          },
         ),
       ),
     );
   }
 
-  Widget _buildDayBubbles(BuildContext context, ActivityPlanLoaded state) {
+  Widget _buildDayCards(BuildContext context, ActivityPlanLoaded state) {
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 120),
+      padding: const EdgeInsets.all(16),
       itemCount: state.itinerary.dayPlans.length,
       itemBuilder: (context, index) {
         final dayPlan = state.itinerary.dayPlans[index];
         return AnimatedListItem(
           index: index,
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Day ${dayPlan.dayNumber}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                _buildActivityBubbles(context, state, dayPlan.dayNumber),
-              ],
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Day ${dayPlan.dayNumber}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                  const Divider(height: 24),
+                  _buildActivityBubbles(context, state, dayPlan.dayNumber),
+                ],
+              ),
             ),
           ),
         );
@@ -215,10 +198,9 @@ class ActivityPlanScreen extends StatelessWidget {
                       radius: const Radius.circular(30),
                       color: Colors.grey,
                       strokeWidth: 2,
-                      dashPattern: const [6, 6],
                       child: const CircleAvatar(
                         radius: 30,
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: AppColors.transparent,
                         child: Icon(Icons.add,
                             color: Colors.grey, size: 30),
                       ),
