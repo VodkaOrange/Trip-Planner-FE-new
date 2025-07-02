@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ai_trip_planner/features/trip/data/models/activity_model.dart';
 import 'package:ai_trip_planner/features/trip/domain/repositories/trip_repository.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/activity_plan_event.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/activity_plan_state.dart';
+import 'package:collection/collection.dart';
 
 class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
   final TripRepository tripRepository;
@@ -56,10 +58,40 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
     if (state is! ActivityPlanLoaded) return;
     final currentState = state as ActivityPlanLoaded;
     try {
-      final updatedItinerary = await tripRepository.selectActivity(
+      final responseItinerary = await tripRepository.selectActivity(
           event.tripId, event.dayNumber, event.activity);
+
+      final Map<String, ActivityModel> knownActivityDetails = {};
+      for (var dayPlan in currentState.itinerary.dayPlans) {
+        for (var activity in dayPlan.activities) {
+          knownActivityDetails[activity.name] = activity;
+        }
+      }
+      knownActivityDetails[event.activity.name] = event.activity;
+
+      final correctedDayPlans = responseItinerary.dayPlans.map((serverDayPlan) {
+        final correctedActivities = serverDayPlan.activities.map((serverActivity) {
+          final clientDetails = knownActivityDetails[serverActivity.name];
+          // Manually construct the new ActivityModel to ensure correctness
+          return ActivityModel(
+            id: serverActivity.id,
+            name: serverActivity.name,
+            city: serverActivity.city,
+            description: serverActivity.description,
+            expectedDurationHours: serverActivity.expectedDurationHours,
+            estimatedCostEUR: serverActivity.estimatedCostEUR,
+            image: clientDetails?.image,
+            address: clientDetails?.address,
+          );
+        }).toList();
+
+        return serverDayPlan.copyWith(activities: correctedActivities);
+      }).toList();
+
+      final finalItinerary = responseItinerary.copyWith(dayPlans: correctedDayPlans);
+
       emit(currentState.copyWith(
-        itinerary: updatedItinerary,
+        itinerary: finalItinerary,
         clearSuggestions: true,
       ));
     } catch (e) {
