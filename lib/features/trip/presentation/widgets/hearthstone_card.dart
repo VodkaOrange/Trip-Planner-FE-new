@@ -41,7 +41,7 @@ class _HearthstoneCardState extends State<HearthstoneCard>
     );
 
     _confettiController =
-        ConfettiController(duration: const Duration(seconds: 3)); // Increased duration
+        ConfettiController(duration: const Duration(seconds: 3));
     _shineController.repeat();
   }
 
@@ -77,7 +77,6 @@ class _HearthstoneCardState extends State<HearthstoneCard>
     return GestureDetector(
       onTap: () async {
         _confettiController.play();
-        // Wait for a short period before executing the tap action for a smoother feel
         await Future.delayed(const Duration(milliseconds: 500));
         if (mounted && widget.onTap != null) {
           widget.onTap!();
@@ -107,65 +106,71 @@ class _HearthstoneCardState extends State<HearthstoneCard>
                     height: 400,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      // Conditionally set the background
                       image: widget.imageUrl != null
                           ? DecorationImage(
                               image: NetworkImage(widget.imageUrl!),
                               fit: BoxFit.cover,
                             )
                           : null,
-                      color: widget.imageUrl == null
-                          ? Colors.grey[200]
+                      gradient: widget.imageUrl == null
+                          ? LinearGradient(
+                              colors: [
+                                Theme.of(context).primaryColor.withOpacity(0.7),
+                                Theme.of(context).primaryColor,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
                           : null,
                     ),
-                    // Display a placeholder icon if no image is available
-                    child: widget.imageUrl == null
-                        ? const Center(
+                    child: Column(
+                      mainAxisAlignment: widget.imageUrl == null
+                          ? MainAxisAlignment.center
+                          : MainAxisAlignment.end,
+                      children: [
+                        if (widget.imageUrl == null)
+                          const Center(
                             child: Icon(
                               Icons.local_activity_outlined,
                               size: 80,
-                              color: Colors.grey,
+                              color: AppColors.white,
                             ),
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                          ),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: const BoxDecoration(
+                            color: AppColors.blackWithHigherOpacity,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: const BoxDecoration(
-                                  color: AppColors.blackWithHigherOpacity,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16),
-                                  ),
+                              Text(
+                                widget.title,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.white,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.title,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.white,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      widget.description,
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.white,
-                                      ),
-                                    ),
-                                  ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                widget.description,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.white,
                                 ),
                               ),
                             ],
                           ),
+                        ),
+                      ],
+                    ),
                   ),
                   // Shine Effect
                   AnimatedBuilder(
