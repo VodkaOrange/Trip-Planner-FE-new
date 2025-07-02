@@ -199,11 +199,10 @@ class ActivityPlanScreen extends StatelessWidget {
                         state.itinerary.id, dayNumber));
               },
               child: DottedBorder(
-                options: RectDottedBorderOptions(
-                  color: Colors.grey,
-                  strokeWidth: 2,
-                  dashPattern: const [6, 6],
-                ),
+                borderType: BorderType.RRect,
+                radius: const Radius.circular(30),
+                color: Colors.grey,
+                strokeWidth: 2,
                 child: const CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.transparent,
