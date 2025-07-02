@@ -81,7 +81,7 @@ class ActivityPlanScreen extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ActivityPlanLoaded) {
               final isTripPlanFinalized = state.itinerary.dayPlans
-                  .every((day) => !day.canFitAnotherActivityInTheSameDay);
+                  .every((day) => day.activities.isNotEmpty);
 
               return Column(
                 children: [
