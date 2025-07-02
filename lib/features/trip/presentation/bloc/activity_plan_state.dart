@@ -16,35 +16,30 @@ class ActivityPlanLoading extends ActivityPlanState {}
 class ActivityPlanLoaded extends ActivityPlanState {
   final ItineraryResponseModel itinerary;
   final List<ActivityModel>? suggestedActivities;
-  final int? loadingDayNumber; // To track which day is loading
+  final int? dayNumberForSuggestions;
 
   const ActivityPlanLoaded({
     required this.itinerary,
     this.suggestedActivities,
-    this.loadingDayNumber,
+    this.dayNumberForSuggestions,
   });
 
   ActivityPlanLoaded copyWith({
     ItineraryResponseModel? itinerary,
     List<ActivityModel>? suggestedActivities,
-    int? loadingDayNumber,
-    bool forceSuggestedActivitiesToNull = false,
-    bool forceLoadingDayToNull = false,
+    int? dayNumberForSuggestions,
+    bool clearSuggestions = false,
   }) {
     return ActivityPlanLoaded(
       itinerary: itinerary ?? this.itinerary,
-      suggestedActivities: forceSuggestedActivitiesToNull
-          ? null
-          : suggestedActivities ?? this.suggestedActivities,
-      loadingDayNumber: forceLoadingDayToNull
-          ? null
-          : loadingDayNumber ?? this.loadingDayNumber,
+      suggestedActivities: clearSuggestions ? null : suggestedActivities ?? this.suggestedActivities,
+      dayNumberForSuggestions: clearSuggestions ? null : dayNumberForSuggestions ?? this.dayNumberForSuggestions,
     );
   }
 
   @override
   List<Object?> get props =>
-      [itinerary, suggestedActivities, loadingDayNumber];
+      [itinerary, suggestedActivities, dayNumberForSuggestions];
 }
 
 class ActivityPlanError extends ActivityPlanState {

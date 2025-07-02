@@ -61,12 +61,11 @@ class ActivityPlanScreen extends StatelessWidget {
                   activities: state.suggestedActivities!,
                   onActivitySelected: (activity) {
                     final tripId = state.itinerary.id;
-                    final dayNumber = state.itinerary.dayPlans
-                        .firstWhere(
-                            (dp) => dp.canFitAnotherActivityInTheSameDay)
-                        .dayNumber;
-                    context.read<ActivityPlanBloc>().add(
-                        SelectActivityForDay(tripId, dayNumber, activity));
+                    final dayNumber = state.dayNumberForSuggestions;
+                    if (dayNumber != null) {
+                      context.read<ActivityPlanBloc>().add(
+                          SelectActivityForDay(tripId, dayNumber, activity));
+                    }
                     Navigator.of(context).pop();
                   },
                 ),
@@ -81,15 +80,14 @@ class ActivityPlanScreen extends StatelessWidget {
             if (state is ActivityPlanLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ActivityPlanLoaded) {
-              final isTripPlanFinalized = state.itinerary.dayPlans
-                  .every((day) => !day.canFitAnotherActivityInTheSameDay);
-
               return Column(
                 children: [
                   Expanded(
                     child: _buildDayCards(context, state),
                   ),
-                  _buildSaveTripButton(context, isTripPlanFinalized),
+                  if (state.itinerary.dayPlans
+                      .every((day) => !day.canFitAnotherActivityInTheSameDay))
+                    _buildSaveTripButton(context),
                 ],
               );
             } else if (state is ActivityPlanError) {
@@ -215,7 +213,7 @@ class ActivityPlanScreen extends StatelessWidget {
                     GetSuggestedActivitiesForDay(
                         state.itinerary.id, dayNumber));
               },
-              child: state.loadingDayNumber == dayNumber
+              child: state.dayNumberForSuggestions == dayNumber
                   ? const SizedBox(
                       width: 60,
                       height: 60,
@@ -240,7 +238,7 @@ class ActivityPlanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSaveTripButton(BuildContext context, bool isEnabled) {
+  Widget _buildSaveTripButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
@@ -248,34 +246,32 @@ class ActivityPlanScreen extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
           ),
-          onPressed: isEnabled
-              ? () async {
-                  final secureStorage = sl<FlutterSecureStorage>();
-                  final token = await secureStorage.read(key: 'token');
-                  if (token == null) {
-                    showDialog(
-                      context: context,
-                      builder: (_) => const LoginModal(),
-                    ).then((_) {
-                      secureStorage.read(key: 'token').then((value) {
-                        if (value != null) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const SaveShareBookScreen(),
-                            ),
-                          );
-                        }
-                      });
-                    });
-                  } else {
+          onPressed: () async {
+            final secureStorage = sl<FlutterSecureStorage>();
+            final token = await secureStorage.read(key: 'token');
+            if (token == null) {
+              showDialog(
+                context: context,
+                builder: (_) => const LoginModal(),
+              ).then((_) {
+                secureStorage.read(key: 'token').then((value) {
+                  if (value != null) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const SaveShareBookScreen(),
                       ),
                     );
                   }
-                }
-              : null,
+                });
+              });
+            } else {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const SaveShareBookScreen(),
+                ),
+              );
+            }
+          },
           child: const Text('Want to save your trip plan and get an offer?'),
         ),
       ),

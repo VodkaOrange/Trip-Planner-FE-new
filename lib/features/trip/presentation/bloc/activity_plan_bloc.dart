@@ -38,14 +38,13 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
     if (state is! ActivityPlanLoaded) return;
     final currentState = state as ActivityPlanLoaded;
 
-    emit(currentState.copyWith(loadingDayNumber: event.dayNumber));
+    emit(currentState.copyWith(dayNumberForSuggestions: event.dayNumber));
     try {
       final activities = await tripRepository.getSuggestedActivities(
           event.tripId, event.dayNumber);
       emit(currentState.copyWith(
         suggestedActivities: activities,
-        loadingDayNumber: null,
-        forceLoadingDayToNull: true,
+        dayNumberForSuggestions: event.dayNumber,
       ));
     } catch (e) {
       emit(ActivityPlanError(e.toString()));
@@ -61,7 +60,7 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
           event.tripId, event.dayNumber, event.activity);
       emit(currentState.copyWith(
         itinerary: updatedItinerary,
-        forceSuggestedActivitiesToNull: true,
+        clearSuggestions: true,
       ));
     } catch (e) {
       emit(ActivityPlanError(e.toString()));
@@ -72,7 +71,7 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
       ClearSuggestedActivities event, Emitter<ActivityPlanState> emit) {
     if (state is ActivityPlanLoaded) {
       final currentState = state as ActivityPlanLoaded;
-      emit(currentState.copyWith(forceSuggestedActivitiesToNull: true));
+      emit(currentState.copyWith(clearSuggestions: true));
     }
   }
 }
