@@ -1,3 +1,4 @@
+import 'package:ai_trip_planner/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/auth_bloc.dart';
@@ -47,9 +48,8 @@ class _LoginModalState extends State<LoginModal> {
               }
             },
             builder: (context, state) {
-              if (state is AuthLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
+              final isLoading = state is AuthLoading;
+
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -62,41 +62,66 @@ class _LoginModalState extends State<LoginModal> {
                   TextFormField(
                     controller: _usernameController,
                     decoration: const InputDecoration(labelText: 'Username'),
+                    enabled: !isLoading,
                   ),
+                  const SizedBox(height: 8), // Added spacing
                   if (_isSigningUp)
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(labelText: 'Email'),
+                    Column(
+                      children: [
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(labelText: 'Email'),
+                          enabled: !isLoading,
+                        ),
+                        const SizedBox(height: 8), // Added spacing
+                      ],
                     ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Password'),
                     obscureText: true,
+                    enabled: !isLoading,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () {
-                      if (_isSigningUp) {
-                        context.read<AuthBloc>().add(SignUp(
-                              _usernameController.text,
-                              _emailController.text,
-                              _passwordController.text,
-                            ));
-                      } else {
-                        context.read<AuthBloc>().add(SignIn(
-                              _usernameController.text,
-                              _passwordController.text,
-                            ));
-                      }
-                    },
-                    child: Text(_isSigningUp ? 'Sign Up' : 'Sign In'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 48),
+                    ),
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            if (_isSigningUp) {
+                              context.read<AuthBloc>().add(SignUp(
+                                    _usernameController.text,
+                                    _emailController.text,
+                                    _passwordController.text,
+                                  ));
+                            } else {
+                              context.read<AuthBloc>().add(SignIn(
+                                    _usernameController.text,
+                                    _passwordController.text,
+                                  ));
+                            }
+                          },
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.white,
+                            ),
+                          )
+                        : Text(_isSigningUp ? 'Sign Up' : 'Sign In'),
                   ),
                   TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _isSigningUp = !_isSigningUp;
-                      });
-                    },
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            setState(() {
+                              _isSigningUp = !_isSigningUp;
+                            });
+                          },
                     child: Text(_isSigningUp
                         ? 'Already have an account? Sign In'
                         : 'Dont have an account? Sign Up'),

@@ -15,14 +15,13 @@ class ActivitySelectionModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      // Ensure the dialog has a shape and is clipped
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
-        // Constrain the height to prevent it from becoming too large
-        height: MediaQuery.of(context).size.height * 0.7,
+        // Set a height that accommodates the cards and title
+        height: 500,
         child: Column(
           children: [
             Padding(
@@ -36,12 +35,14 @@ class ActivitySelectionModal extends StatelessWidget {
             // Use an Expanded ListView for the scrollable content
             Expanded(
               child: ListView.builder(
+                scrollDirection: Axis.horizontal, // Changed to horizontal
                 padding: const EdgeInsets.all(16.0),
                 itemCount: activities.length,
                 itemBuilder: (context, index) {
                   final activity = activities[index];
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
+                    // Changed to horizontal padding
+                    padding: const EdgeInsets.only(right: 16.0),
                     child: HearthstoneCard(
                       imageUrl: activity.image,
                       title: activity.name,
