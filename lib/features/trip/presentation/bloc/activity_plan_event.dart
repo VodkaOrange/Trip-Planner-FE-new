@@ -58,3 +58,5 @@ class SelectActivityForDay extends ActivityPlanEvent {
   @override
   List<Object> get props => [tripId, dayNumber, activity];
 }
+
+class ClearSuggestedActivities extends ActivityPlanEvent {}

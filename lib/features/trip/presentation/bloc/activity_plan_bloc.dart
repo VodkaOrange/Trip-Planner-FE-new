@@ -11,6 +11,7 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
     on<GetInitialActivityPlan>(_onGetInitialActivityPlan);
     on<GetSuggestedActivitiesForDay>(_onGetSuggestedActivitiesForDay);
     on<SelectActivityForDay>(_onSelectActivityForDay);
+    on<ClearSuggestedActivities>(_onClearSuggestedActivities);
   }
 
   void _onGetInitialActivityPlan(
@@ -34,11 +35,18 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
 
   void _onGetSuggestedActivitiesForDay(GetSuggestedActivitiesForDay event,
       Emitter<ActivityPlanState> emit) async {
+    if (state is! ActivityPlanLoaded) return;
+    final currentState = state as ActivityPlanLoaded;
+
+    emit(currentState.copyWith(loadingDayNumber: event.dayNumber));
     try {
-      final currentState = state as ActivityPlanLoaded;
       final activities = await tripRepository.getSuggestedActivities(
           event.tripId, event.dayNumber);
-      emit(currentState.copyWith(suggestedActivities: activities));
+      emit(currentState.copyWith(
+        suggestedActivities: activities,
+        loadingDayNumber: null,
+        forceLoadingDayToNull: true,
+      ));
     } catch (e) {
       emit(ActivityPlanError(e.toString()));
     }
@@ -46,12 +54,25 @@ class ActivityPlanBloc extends Bloc<ActivityPlanEvent, ActivityPlanState> {
 
   void _onSelectActivityForDay(
       SelectActivityForDay event, Emitter<ActivityPlanState> emit) async {
+    if (state is! ActivityPlanLoaded) return;
+    final currentState = state as ActivityPlanLoaded;
     try {
       final updatedItinerary = await tripRepository.selectActivity(
           event.tripId, event.dayNumber, event.activity);
-      emit(ActivityPlanLoaded(itinerary: updatedItinerary));
+      emit(currentState.copyWith(
+        itinerary: updatedItinerary,
+        forceSuggestedActivitiesToNull: true,
+      ));
     } catch (e) {
       emit(ActivityPlanError(e.toString()));
+    }
+  }
+
+  void _onClearSuggestedActivities(
+      ClearSuggestedActivities event, Emitter<ActivityPlanState> emit) {
+    if (state is ActivityPlanLoaded) {
+      final currentState = state as ActivityPlanLoaded;
+      emit(currentState.copyWith(forceSuggestedActivitiesToNull: true));
     }
   }
 }
