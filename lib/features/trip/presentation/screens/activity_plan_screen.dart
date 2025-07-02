@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:ai_trip_planner/core/theme/app_colors.dart';
 import 'package:ai_trip_planner/core/widgets/custom_app_bar.dart';
 import 'package:ai_trip_planner/core/widgets/error_state_widget.dart';
+import 'package:ai_trip_planner/features/trip/presentation/screens/activity_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_trip_planner/features/trip/presentation/bloc/activity_plan_bloc.dart';
@@ -80,15 +81,15 @@ class ActivityPlanScreen extends StatelessWidget {
             if (state is ActivityPlanLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ActivityPlanLoaded) {
-              final isTripPlanFinalized = state.itinerary.dayPlans
-                  .every((day) => day.activities.isNotEmpty);
+              final isButtonEnabled = state.itinerary.dayPlans
+                  .any((day) => day.activities.isNotEmpty);
 
               return Column(
                 children: [
                   Expanded(
                     child: _buildDayCards(context, state),
                   ),
-                  _buildSaveTripButton(context, isTripPlanFinalized),
+                  _buildSaveTripButton(context, isButtonEnabled),
                 ],
               );
             } else if (state is ActivityPlanError) {
@@ -191,16 +192,25 @@ class ActivityPlanScreen extends StatelessWidget {
           final activity = entry.value;
           return AnimatedListItem(
             index: index,
-            child: Hero(
-              tag: activity.image ?? 'activity-hero-${activity.id}',
-              child: CircleAvatar(
-                radius: 30,
-                backgroundImage: activity.image != null
-                    ? NetworkImage(activity.image!)
-                    : null,
-                child: activity.image == null
-                    ? const Icon(Icons.local_activity, color: Colors.white)
-                    : null,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ActivityDetailsScreen(activity: activity),
+                  ),
+                );
+              },
+              child: Hero(
+                tag: activity.image ?? 'activity-hero-${activity.id}',
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: activity.image != null
+                      ? NetworkImage(activity.image!)
+                      : null,
+                  child: activity.image == null
+                      ? const Icon(Icons.local_activity, color: Colors.white)
+                      : null,
+                ),
               ),
             ),
           );
