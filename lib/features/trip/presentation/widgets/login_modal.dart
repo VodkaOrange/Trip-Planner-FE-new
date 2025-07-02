@@ -28,7 +28,18 @@ class _LoginModalState extends State<LoginModal> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
-                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Success! You are now logged in.'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                // Add a small delay so the user can see the snackbar
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (mounted) {
+                    Navigator.of(context).pop();
+                  }
+                });
               } else if (state is AuthFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.message)),
