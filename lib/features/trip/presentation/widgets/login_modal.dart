@@ -18,6 +18,43 @@ class _LoginModalState extends State<LoginModal> {
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
   bool _isSigningUp = false;
+  bool _isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController.addListener(_validateFields);
+    _passwordController.addListener(_validateFields);
+    _emailController.addListener(_validateFields);
+  }
+
+  @override
+  void dispose() {
+    _usernameController.removeListener(_validateFields);
+    _passwordController.removeListener(_validateFields);
+    _emailController.removeListener(_validateFields);
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _validateFields() {
+    final bool isEnabled;
+    if (_isSigningUp) {
+      isEnabled = _usernameController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty &&
+          _emailController.text.isNotEmpty;
+    } else {
+      isEnabled = _usernameController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty;
+    }
+    if (isEnabled != _isButtonEnabled) {
+      setState(() {
+        _isButtonEnabled = isEnabled;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +72,6 @@ class _LoginModalState extends State<LoginModal> {
                     backgroundColor: Colors.green,
                   ),
                 );
-                // Add a small delay so the user can see the snackbar
                 Future.delayed(const Duration(milliseconds: 500), () {
                   if (mounted) {
                     Navigator.of(context).pop();
@@ -64,7 +100,7 @@ class _LoginModalState extends State<LoginModal> {
                     decoration: const InputDecoration(labelText: 'Username'),
                     enabled: !isLoading,
                   ),
-                  const SizedBox(height: 8), // Added spacing
+                  const SizedBox(height: 8),
                   if (_isSigningUp)
                     Column(
                       children: [
@@ -73,7 +109,7 @@ class _LoginModalState extends State<LoginModal> {
                           decoration: const InputDecoration(labelText: 'Email'),
                           enabled: !isLoading,
                         ),
-                        const SizedBox(height: 8), // Added spacing
+                        const SizedBox(height: 8),
                       ],
                     ),
                   TextFormField(
@@ -87,7 +123,7 @@ class _LoginModalState extends State<LoginModal> {
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 48),
                     ),
-                    onPressed: isLoading
+                    onPressed: (isLoading || !_isButtonEnabled)
                         ? null
                         : () {
                             if (_isSigningUp) {
@@ -120,6 +156,7 @@ class _LoginModalState extends State<LoginModal> {
                         : () {
                             setState(() {
                               _isSigningUp = !_isSigningUp;
+                              _validateFields(); // Re-validate when switching modes
                             });
                           },
                     child: Text(_isSigningUp
