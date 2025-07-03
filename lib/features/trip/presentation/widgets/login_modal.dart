@@ -103,7 +103,7 @@ class _LoginModalState extends State<LoginModal> {
                     decoration: const InputDecoration(labelText: 'Username'),
                     enabled: !isLoading,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16), // Increased spacing
                   if (_isSigningUp)
                     Column(
                       children: [
@@ -112,7 +112,7 @@ class _LoginModalState extends State<LoginModal> {
                           decoration: const InputDecoration(labelText: 'Email'),
                           enabled: !isLoading,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 16), // Increased spacing
                       ],
                     ),
                   TextFormField(
