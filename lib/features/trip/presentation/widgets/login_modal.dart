@@ -79,7 +79,10 @@ class _LoginModalState extends State<LoginModal> {
                 });
               } else if (state is AuthFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
+                  const SnackBar(
+                    content: Text('Invalid credentials. Please try again.'),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
             },
@@ -156,7 +159,7 @@ class _LoginModalState extends State<LoginModal> {
                         : () {
                             setState(() {
                               _isSigningUp = !_isSigningUp;
-                              _validateFields(); // Re-validate when switching modes
+                              _validateFields();
                             });
                           },
                     child: Text(_isSigningUp

@@ -89,7 +89,6 @@ class TripRepositoryImpl implements TripRepository {
       '/auth/signin',
       data: {'username': username, 'password': password},
     );
-    // Corrected to use 'accessToken' from the response
     return response.data['accessToken'];
   }
 
@@ -99,7 +98,6 @@ class TripRepositoryImpl implements TripRepository {
       '/auth/signup',
       data: {'username': username, 'email': email, 'password': password},
     );
-    // The access token is returned directly on sign up
     return response.data['accessToken'];
   }
 }
