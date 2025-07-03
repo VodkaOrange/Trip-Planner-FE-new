@@ -73,66 +73,63 @@ class PlanYourAdventureScreen extends StatelessWidget {
     ];
 
     // No longer needs a fixed height or a SizedBox
-    return Scrollbar(
-      thumbVisibility: true,
-      child: GridView.builder(
-        shrinkWrap: true, // Important for nested scrolling
-        physics:
-            const NeverScrollableScrollPhysics(), // Parent handles scrolling
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 0.9,
-        ),
-        itemCount: activities.length,
-        itemBuilder: (context, index) {
-          final activity = activities[index];
-          final label = activity['label'] as String;
-          final isSelected = state.selectedActivities.contains(label);
-
-          return GestureDetector(
-            onTap: () {
-              if (isSelected) {
-                context
-                    .read<PlanYourAdventureBloc>()
-                    .add(DeselectActivity(label));
-              } else {
-                context
-                    .read<PlanYourAdventureBloc>()
-                    .add(SelectActivity(label));
-              }
-            },
-            child: Card(
-              elevation: isSelected ? 8 : 2,
-              color: isSelected
-                  ? Theme.of(context).primaryColor.withOpacity(0.8)
-                  : AppColors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    activity['icon'] as IconData,
-                    size: 35,
-                    color: isSelected ? AppColors.white : AppColors.black,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    label,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isSelected ? AppColors.white : AppColors.black,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+    return GridView.builder(
+      shrinkWrap: true, // Important for nested scrolling
+      physics:
+          const NeverScrollableScrollPhysics(), // Parent handles scrolling
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.9,
       ),
+      itemCount: activities.length,
+      itemBuilder: (context, index) {
+        final activity = activities[index];
+        final label = activity['label'] as String;
+        final isSelected = state.selectedActivities.contains(label);
+
+        return GestureDetector(
+          onTap: () {
+            if (isSelected) {
+              context
+                  .read<PlanYourAdventureBloc>()
+                  .add(DeselectActivity(label));
+            } else {
+              context
+                  .read<PlanYourAdventureBloc>()
+                  .add(SelectActivity(label));
+            }
+          },
+          child: Card(
+            elevation: isSelected ? 8 : 2,
+            color: isSelected
+                ? Theme.of(context).primaryColor.withOpacity(0.8)
+                : AppColors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  activity['icon'] as IconData,
+                  size: 35,
+                  color: isSelected ? AppColors.white : AppColors.black,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isSelected ? AppColors.white : AppColors.black,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -193,7 +190,7 @@ class PlanYourAdventureScreen extends StatelessWidget {
           ],
         ),
         const Text(
-          'Based on your selected activities, well suggest the best destination for you.',
+          "Based on your selected activities, we'll suggest the best destination for you.",
           style: TextStyle(fontSize: 12, color: Colors.grey),
         ),
       ],

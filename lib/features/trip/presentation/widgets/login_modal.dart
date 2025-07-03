@@ -164,7 +164,7 @@ class _LoginModalState extends State<LoginModal> {
                           },
                     child: Text(_isSigningUp
                         ? 'Already have an account? Sign In'
-                        : 'Dont have an account? Sign Up'),
+                        : "Don't have an account? Sign Up"),
                   ),
                 ],
               );
